@@ -8,6 +8,7 @@ import { ThemeProvider } from "next-themes";
 import Link from "next/link";
 import "./globals.css";
 import { ShoppingBasket } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const defaultUrl = process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}`
@@ -48,9 +49,15 @@ export default function RootLayout({
                                             className="flex items-center hover:bg-accent hover:text-accent-foreground p-2 rounded"
                                         >
                                             <ShoppingBasket className="stroke-primary" />
-                                            <span className="ml-2">
+                                            <span className="ml-2 text-primary">
                                                 Basket.something
                                             </span>
+                                        </Link>
+                                        <Link
+                                            href={"/baskets"}
+                                            className="flex items-center"
+                                        >
+                                            <Button> See Baskets</Button>
                                         </Link>
                                     </div>
                                 </div>
