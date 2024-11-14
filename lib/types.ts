@@ -1,15 +1,16 @@
 export type Basket = {
-    basket_id: string;
-    basket_name: string;
-    rebalance_interval: number;
-    created_at: string;
+    id: string;
+    name: string;
+    rebalanceInterval: number;
+    createdAt: string;
+    tokens: BasketToken[];
 };
 
 export type BasketToken = {
-    id: string;
-    basket_id: string;
-    token_symbol: string;
-    token_address: string;
+    id?: string;
+    basket_id?: string;
+    symbol: string;
+    address: string;
     allocation: number;
 };
 

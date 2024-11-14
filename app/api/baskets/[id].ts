@@ -21,10 +21,10 @@ export default async function handler(
     }
 
     if (req.method === "PUT") {
-        const { basket_name, rebalance_interval } = req.body;
+        const { name, rebalance_interval } = req.body;
         const { data, error } = await supabase
             .from("baskets")
-            .update({ basket_name, rebalance_interval })
+            .update({ name, rebalance_interval })
             .eq("basket_id", id as string)
             .single();
 
