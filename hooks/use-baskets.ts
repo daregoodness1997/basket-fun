@@ -74,11 +74,10 @@ export function useBaskets() {
                 });
             }
 
+            const basket: Basket = { ...createdBasket, tokens };
+
             // Step 3: Fetch updated baskets list to reflect new addition
-            setBaskets((prevBaskets: Basket[]) => [
-                ...prevBaskets,
-                { ...createdBasket, tokens },
-            ]);
+            setBaskets((prevBaskets: Basket[]) => [...prevBaskets, basket]);
         } catch (error: any) {
             setError(error.message);
         }
