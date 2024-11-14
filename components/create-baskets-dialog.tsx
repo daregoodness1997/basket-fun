@@ -70,7 +70,7 @@ export default function CreateBasketDialog() {
             <DialogTrigger asChild>
                 <Button>Create New Basket</Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[425px] max-h-screen overflow-scroll">
                 <DialogHeader>
                     <DialogTitle>Create New Basket</DialogTitle>
                     <DialogDescription>
@@ -136,7 +136,9 @@ export default function CreateBasketDialog() {
                                     name={`tokens.${index}.symbol`}
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Token Symbol</FormLabel>
+                                            <FormLabel>
+                                                Token {index + 1} Symbol
+                                            </FormLabel>
                                             <FormControl>
                                                 <Input
                                                     placeholder="ETH"
@@ -152,7 +154,9 @@ export default function CreateBasketDialog() {
                                     name={`tokens.${index}.address`}
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Token Address</FormLabel>
+                                            <FormLabel>
+                                                Token {index + 1} Address
+                                            </FormLabel>
                                             <FormControl>
                                                 <Input
                                                     placeholder="0x..."
@@ -169,7 +173,7 @@ export default function CreateBasketDialog() {
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>
-                                                Allocation (%)
+                                                Token {index + 1} Allocation (%)
                                             </FormLabel>
                                             <FormControl>
                                                 <Input
