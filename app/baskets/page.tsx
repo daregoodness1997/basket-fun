@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import CreateBasketDialog from "@/components/create-baskets-dialog";
 import BasketsTable from "@/components/baskets-table";
+import SkeletonTable from "@/components/skeleton-table";
 
 export default function Home() {
     return (
@@ -9,7 +10,7 @@ export default function Home() {
             <div className="mb-4">
                 <CreateBasketDialog />
             </div>
-            <Suspense fallback={<div>Loading baskets...</div>}>
+            <Suspense fallback={<SkeletonTable columns={5} />}>
                 <BasketsTable />
             </Suspense>
         </div>

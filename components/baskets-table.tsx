@@ -12,11 +12,12 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useBaskets } from "@/hooks/use-baskets";
 import { Basket } from "@/lib/types";
+import SkeletonTable from "./skeleton-table";
 
 export default function BasketsTable() {
     const { baskets, loading, error } = useBaskets();
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <SkeletonTable columns={5} />;
     if (error) return <p>Error: {error}</p>;
 
     return (
