@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/table";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function BasketDetails() {
     const params = useParams();
@@ -26,13 +27,13 @@ export default function BasketDetails() {
     const basket = getBasketById(params.id as string);
 
     if (!basket) {
-        return <div>Basket not found</div>;
+        return <Skeleton className="container py-10 w-screen max-w-2xl h-96" />;
     }
 
     return (
         <div className="container mx-auto py-10">
             <Button asChild className="mb-4">
-                <Link href="/">Back to Baskets</Link>
+                <Link href="/baskets">Back to Baskets</Link>
             </Button>
             <Card>
                 <CardHeader>
@@ -56,7 +57,9 @@ export default function BasketDetails() {
                                 <TableRow key={index}>
                                     <TableCell>{token.symbol}</TableCell>
                                     <TableCell>{token.address}</TableCell>
-                                    <TableCell>{token.allocation}%</TableCell>
+                                    <TableCell>
+                                        {token.allocation * 100}%
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

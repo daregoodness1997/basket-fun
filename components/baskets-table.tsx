@@ -44,7 +44,7 @@ export default function BasketsTable() {
                         </TableCell>
                         <TableCell>
                             <Button asChild>
-                                <Link href={`/basket/${basket.id}`}>
+                                <Link href={`/baskets/${basket.id}`}>
                                     View Details
                                 </Link>
                             </Button>
