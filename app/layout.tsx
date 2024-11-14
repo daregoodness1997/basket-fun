@@ -43,12 +43,15 @@ export default function RootLayout({
                                 <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
                                     <div className="flex gap-5 items-center font-semibold">
                                         <ThemeSwitcher />
-                                        <Link href={"/"}>
+                                        <Link
+                                            href={"/"}
+                                            className="flex items-center hover:bg-accent hover:text-accent-foreground p-2 rounded"
+                                        >
                                             <ShoppingBasket className="stroke-primary" />
+                                            <span className="ml-2">
+                                                Basket.something
+                                            </span>
                                         </Link>
-                                        <div className="flex items-center gap-2">
-                                            <DeployButton />
-                                        </div>
                                     </div>
                                 </div>
                             </nav>
