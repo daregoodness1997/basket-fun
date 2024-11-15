@@ -19,7 +19,6 @@ async function calculateBasketPrice(basketId: string) {
             .order("timestamp", { ascending: false })
             .limit(1);
 
-        console.log("Price data", priceData);
         const tokenPrice = priceData?.[0]?.price || 0;
         basketPrice += token.allocation * tokenPrice;
     }

@@ -33,12 +33,10 @@ export default function BasketDetails() {
 
     useEffect(() => {
         const fetchBasketPrices = async () => {
-            await fetch("/api/baskets/update-price");
             const response = await fetch(
                 `/api/baskets/price?basketId=${params.id}`
             );
             const data = await response.json();
-            console.log("data", data);
             const formattedData = data.map(
                 (entry: { timestamp: string; price: number }) => ({
                     time: entry.timestamp,
@@ -50,7 +48,6 @@ export default function BasketDetails() {
 
         fetchBasketPrices();
     }, [params.id]);
-    console.log("Price Data", priceData);
 
     if (!basket) {
         return <Skeleton className="container py-10 w-[80vw] max-w-2xl h-96" />;
