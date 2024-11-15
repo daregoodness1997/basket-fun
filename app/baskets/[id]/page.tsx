@@ -61,7 +61,7 @@ export default function BasketDetails() {
             <Button asChild className="mb-4">
                 <Link href="/baskets">Back to Baskets</Link>
             </Button>
-            <BasketPriceChart priceData={priceData} />
+            <BasketPriceChart priceData={priceData} name={basket.name} />
             <Card>
                 <CardHeader>
                     <CardTitle>{basket.name}</CardTitle>
