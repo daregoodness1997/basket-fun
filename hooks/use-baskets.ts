@@ -16,7 +16,6 @@ export function useBaskets() {
                     throw new Error("Failed to fetch baskets");
                 }
                 const data = await response.json();
-                console.log(data);
 
                 // Convert the response to camelCase
                 const camelCasedData = camelCaseKeys(data);
