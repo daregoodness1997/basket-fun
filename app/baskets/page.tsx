@@ -10,7 +10,7 @@ export default function Home() {
             <div className="mb-4">
                 <CreateBasketDialog />
             </div>
-            <Suspense fallback={<SkeletonTable columns={5} />}>
+            <Suspense fallback={<SkeletonTable columns={4} />}>
                 <BasketsTable />
             </Suspense>
         </div>

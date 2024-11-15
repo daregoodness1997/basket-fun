@@ -53,7 +53,7 @@ export default function BasketDetails() {
     console.log("Price Data", priceData);
 
     if (!basket) {
-        return <Skeleton className="container py-10 w-screen max-w-2xl h-96" />;
+        return <Skeleton className="container py-10 w-[80vw] max-w-2xl h-96" />;
     }
 
     return (
@@ -62,7 +62,7 @@ export default function BasketDetails() {
                 <Link href="/baskets">Back to Baskets</Link>
             </Button>
             <BasketPriceChart priceData={priceData} name={basket.name} />
-            <Card>
+            <Card className="max-w-[80vw] sm:max-w-none">
                 <CardHeader>
                     <CardTitle>{basket.name}</CardTitle>
                     <CardDescription>
@@ -75,18 +75,18 @@ export default function BasketDetails() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Symbol</TableHead>
-                                <TableHead>Address</TableHead>
                                 <TableHead>Allocation</TableHead>
+                                <TableHead>Address</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {basket.tokens.map((token, index) => (
                                 <TableRow key={index}>
                                     <TableCell>{token.symbol}</TableCell>
-                                    <TableCell>{token.address}</TableCell>
                                     <TableCell>
                                         {token.allocation * 100}%
                                     </TableCell>
+                                    <TableCell>{token.address}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

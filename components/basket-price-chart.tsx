@@ -25,13 +25,14 @@ const BasketPriceChart: React.FC<BasketPriceChartProps> = ({
             time: Math.floor(new Date(data.time).getTime() / 1000), // Convert to seconds
             value: data.value,
         }));
+        const myPriceFormatter = (p: any) => p.toFixed(8);
 
         const chartOptions = {
             layout: {
                 textColor: theme === "dark" ? "white" : "black",
                 background: {
                     type: "solid",
-                    color: theme === "dark" ? "#1e293b" : "#ffffff", // Tailwind `slate-800` and `white`
+                    color: theme === "dark" ? "#0f172a" : "#ffffff", // Tailwind `slate-900` and `white`
                 },
             },
             timeScale: {
@@ -40,10 +41,10 @@ const BasketPriceChart: React.FC<BasketPriceChartProps> = ({
             },
             grid: {
                 vertLines: {
-                    color: theme === "dark" ? "#334155" : "#e5e7eb", // Tailwind `slate-600` and `gray-200`
+                    color: theme === "dark" ? "#475569" : "#e5e7eb", // Tailwind `slate-600` and `gray-200`
                 },
                 horzLines: {
-                    color: theme === "dark" ? "#334155" : "#e5e7eb",
+                    color: theme === "dark" ? "#475569" : "#e5e7eb",
                 },
             },
             watermark: {
@@ -57,12 +58,22 @@ const BasketPriceChart: React.FC<BasketPriceChartProps> = ({
                         : "rgba(0, 0, 0, 0.1)",
                 text: "basket.something",
             },
+            localization: {
+                priceFormatter: myPriceFormatter,
+            },
         };
 
         // @ts-ignore
         const chart = createChart(chartContainerRef.current, chartOptions);
 
         const lineSeries = chart.addLineSeries();
+        lineSeries.priceScale().applyOptions({
+            autoScale: false,
+            scaleMargins: {
+                top: 0.4,
+                bottom: 0.3,
+            },
+        });
         // @ts-ignore
         lineSeries.setData(formattedData);
 
@@ -100,14 +111,15 @@ const BasketPriceChart: React.FC<BasketPriceChartProps> = ({
 
     return (
         <div className="relative">
-            <div ref={chartContainerRef} className="w-full h-96" />
+            <div
+                ref={chartContainerRef}
+                className="w-full h-96 sm:max-w-none max-w-[80vw] rounded"
+            />
             <div
                 ref={legendRef}
-                className={`absolute left-3 top-3 p-2 rounded z-50 ${
-                    theme === "dark"
-                        ? "bg-gray-800 text-white"
-                        : "bg-white text-black"
-                }`}
+                className={
+                    "absolute left-3 top-3 p-2 rounded z-50 bg-muted text-primary"
+                }
             ></div>
         </div>
     );

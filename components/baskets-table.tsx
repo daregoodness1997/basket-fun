@@ -17,7 +17,7 @@ import SkeletonTable from "./skeleton-table";
 export default function BasketsTable() {
     const { baskets, loading, error } = useBaskets();
 
-    if (loading) return <SkeletonTable columns={5} />;
+    if (loading) return <SkeletonTable columns={4} />;
     if (error) return <p>Error: {error}</p>;
 
     return (
@@ -27,7 +27,6 @@ export default function BasketsTable() {
                     <TableHead>Basket Name</TableHead>
                     <TableHead>Rebalance Interval</TableHead>
                     <TableHead>Number of Tokens</TableHead>
-                    <TableHead>Created At</TableHead>
                     <TableHead>Actions</TableHead>
                 </TableRow>
             </TableHeader>
@@ -38,9 +37,6 @@ export default function BasketsTable() {
                         <TableCell>{basket.rebalanceInterval} days</TableCell>
                         <TableCell>
                             {basket.tokens && basket.tokens.length}
-                        </TableCell>
-                        <TableCell>
-                            {new Date(basket.createdAt).toLocaleString()}
                         </TableCell>
                         <TableCell>
                             <Button asChild>

@@ -24,7 +24,7 @@ export default function SkeletonTable({
                 <TableRow>
                     {Array.from({ length: columns }).map((_, colIndex) => (
                         <TableHead key={colIndex}>
-                            <Skeleton className="h-6 w-32" />{" "}
+                            <Skeleton className="w-20 h-6 sm:w-32" />{" "}
                             {/* Placeholder for header */}
                         </TableHead>
                     ))}
