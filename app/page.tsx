@@ -4,9 +4,17 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ShoppingBasket } from "lucide-react";
+import { useEffect } from "react";
 
 export default function AnimatedHero() {
     const tokens = ["GOAT", "PNUT", "SOL", "WIF", "SCF", "DOGE"];
+    useEffect(() => {
+        const updatePrices = async () => {
+            await fetch("/api/baskets/token-price");
+            await fetch("/api/baskets/update-price");
+        };
+        updatePrices;
+    });
 
     return (
         <div className="w-full py-12 flex flex-col items-center justify-center">
