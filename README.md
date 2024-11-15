@@ -18,14 +18,14 @@ Build your own baskets to optimise your gains!
 
 -   [x] Set up Supabase
 -   [x] Create Basket with Tokens
--   [ ] Track Basket Price
-    -   [ ] Store Token Price
-    -   [ ] Calculate Basket Price
-    -   [ ] Display Basket Price in TradingView Lighweight chart
--   [ ] Rebalancing Basket
+-   [x] Track Basket Price
+    -   [x] Store Token Price
+    -   [x] Calculate Basket Price
+    -   [x] Display Basket Price in TradingView Lighweight chart
 -   [ ] Buy Basket tokens through Jup
     -   [ ] Wallet Login
     -   [ ] Jup integration
+-   [ ] Rebalancing Basket
 -   [ ] Tokenized Basket Token
 
 ### Misc.
