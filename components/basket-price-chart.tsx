@@ -1,5 +1,8 @@
+"use client";
+
 import React, { useEffect, useRef } from "react";
 import { createChart } from "lightweight-charts";
+import { useTheme } from "next-themes";
 
 interface BasketPriceChartProps {
     priceData: { time: string; value: number }[]; // Time as ISO string
@@ -12,6 +15,7 @@ const BasketPriceChart: React.FC<BasketPriceChartProps> = ({
 }) => {
     const chartContainerRef = useRef<HTMLDivElement>(null);
     const legendRef = useRef<HTMLDivElement>(null);
+    const { theme } = useTheme();
 
     useEffect(() => {
         if (!chartContainerRef.current) return;
@@ -24,8 +28,11 @@ const BasketPriceChart: React.FC<BasketPriceChartProps> = ({
 
         const chartOptions = {
             layout: {
-                textColor: "black",
-                background: { type: "solid", color: "white" },
+                textColor: theme === "dark" ? "white" : "black",
+                background: {
+                    type: "solid",
+                    color: theme === "dark" ? "#1e293b" : "#ffffff", // Tailwind `slate-800` and `white`
+                },
             },
             timeScale: {
                 timeVisible: true, // Show time on the scale
@@ -33,10 +40,10 @@ const BasketPriceChart: React.FC<BasketPriceChartProps> = ({
             },
             grid: {
                 vertLines: {
-                    visible: true,
+                    color: theme === "dark" ? "#334155" : "#e5e7eb", // Tailwind `slate-600` and `gray-200`
                 },
                 horzLines: {
-                    visible: true,
+                    color: theme === "dark" ? "#334155" : "#e5e7eb",
                 },
             },
             watermark: {
@@ -44,7 +51,10 @@ const BasketPriceChart: React.FC<BasketPriceChartProps> = ({
                 fontSize: 24,
                 horzAlign: "center",
                 vertAlign: "center",
-                color: "rgba(255, 114, 22, 0.5)",
+                color:
+                    theme === "dark"
+                        ? "rgba(255, 255, 255, 0.3)"
+                        : "rgba(0, 0, 0, 0.1)",
                 text: "basket.something",
             },
         };
@@ -59,7 +69,6 @@ const BasketPriceChart: React.FC<BasketPriceChartProps> = ({
         // Handle crosshair move to update legend
         chart.subscribeCrosshairMove((param: any) => {
             if (!legendRef.current) return;
-            console.log(param);
 
             let price = "--";
             if (param?.seriesData?.get(lineSeries)) {
@@ -87,14 +96,18 @@ const BasketPriceChart: React.FC<BasketPriceChartProps> = ({
         }
 
         return () => chart.remove();
-    }, [priceData]);
+    }, [priceData, theme]);
 
     return (
         <div className="relative">
             <div ref={chartContainerRef} className="w-full h-96" />
             <div
                 ref={legendRef}
-                className="absolute left-3 top-3 bg-black p-2 rounded z-50"
+                className={`absolute left-3 top-3 p-2 rounded z-50 ${
+                    theme === "dark"
+                        ? "bg-gray-800 text-white"
+                        : "bg-white text-black"
+                }`}
             ></div>
         </div>
     );
