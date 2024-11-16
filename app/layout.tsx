@@ -10,17 +10,15 @@ const defaultUrl = process.env.VERCEL_URL
 export const metadata = {
     metadataBase: new URL(defaultUrl),
     title: "BasketFi",
-    description:
-        "Effortlessly create and manage your token baskets with our intuitive platform",
+    description: "Create your own Token Basket.",
     openGraph: {
         title: "BasketFi",
-        description:
-            "Effortlessly create and manage your token baskets with our intuitive platform",
+        description: "Create your own Token Basket.",
         url: defaultUrl,
         siteName: "BasketFi",
         images: [
             {
-                url: `${defaultUrl}/og-image.png`, // Replace with your OG image URL
+                url: `${defaultUrl}/opengraph-image.png`, // Replace with your OG image URL
                 width: 1200,
                 height: 630,
                 alt: "BasketFi Preview",

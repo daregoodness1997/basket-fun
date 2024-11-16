@@ -20,7 +20,7 @@ const Navbar = () => {
                         >
                             <ShoppingBasket className="stroke-primary" />
                             <span className="ml-2 text-primary hidden sm:block">
-                                Basket.something
+                                BasketFi.xyz
                             </span>
                         </Link>
                     </div>
