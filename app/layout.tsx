@@ -9,8 +9,26 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
     metadataBase: new URL(defaultUrl),
-    title: "Next.js and Supabase Starter Kit",
-    description: "The fastest way to build apps with Next.js and Supabase",
+    title: "BasketFi",
+    description:
+        "Effortlessly create and manage your token baskets with our intuitive platform",
+    openGraph: {
+        title: "BasketFi",
+        description:
+            "Effortlessly create and manage your token baskets with our intuitive platform",
+        url: defaultUrl,
+        siteName: "BasketFi",
+        images: [
+            {
+                url: `${defaultUrl}/og-image.png`, // Replace with your OG image URL
+                width: 1200,
+                height: 630,
+                alt: "BasketFi Preview",
+            },
+        ],
+        locale: "en_US",
+        type: "website",
+    },
 };
 
 export default function RootLayout({
