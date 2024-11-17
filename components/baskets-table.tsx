@@ -14,27 +14,97 @@ import { useBaskets } from "@/hooks/use-baskets";
 import { Basket } from "@/lib/types";
 import SkeletonTable from "./skeleton-table";
 import PriceChange from "@/components/percentage-price-change";
+import { useState } from "react";
+import { ArrowUp, ArrowDown } from "lucide-react";
+
+type SortField =
+    | "name"
+    | "currentPrice"
+    | "price1hChange"
+    | "price4hChange"
+    | "price24hChange";
+type SortDirection = "asc" | "desc";
 
 export default function BasketsTable() {
     const { baskets, loading, error } = useBaskets();
+    const [sortField, setSortField] = useState<SortField>("name");
+    const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
 
     if (loading) return <SkeletonTable columns={5} />;
     if (error) return <p>Error: {error}</p>;
+
+    const handleSort = (field: SortField) => {
+        if (sortField === field) {
+            // Toggle sort direction
+            setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+        } else {
+            // Set new sort field and default direction
+            setSortField(field);
+            setSortDirection("asc");
+        }
+    };
+
+    const sortedBaskets = [...baskets].sort((a, b) => {
+        const valueA = a[sortField];
+        const valueB = b[sortField];
+
+        if (valueA < valueB) return sortDirection === "asc" ? -1 : 1;
+        if (valueA > valueB) return sortDirection === "asc" ? 1 : -1;
+        return 0;
+    });
+
+    const renderSortIndicator = (field: SortField) => {
+        return (
+            <span className="inline-flex items-center w-4 h-4 ml-2">
+                {sortField === field &&
+                    (sortDirection === "asc" ? (
+                        <ArrowUp className="w-4 h-4" />
+                    ) : (
+                        <ArrowDown className="w-4 h-4" />
+                    ))}
+            </span>
+        );
+    };
 
     return (
         <Table>
             <TableHeader>
                 <TableRow>
-                    <TableHead>Basket Name</TableHead>
-                    <TableHead>Price</TableHead>
-                    <TableHead>1H Change</TableHead>
-                    <TableHead>4H Change</TableHead>
-                    <TableHead>24H Change</TableHead>
+                    <TableHead
+                        onClick={() => handleSort("name")}
+                        className="cursor-pointer"
+                    >
+                        Basket Name {renderSortIndicator("name")}
+                    </TableHead>
+                    <TableHead
+                        onClick={() => handleSort("currentPrice")}
+                        className="cursor-pointer"
+                    >
+                        Price {renderSortIndicator("currentPrice")}
+                    </TableHead>
+                    <TableHead
+                        onClick={() => handleSort("price1hChange")}
+                        className="cursor-pointer"
+                    >
+                        1H Change {renderSortIndicator("price1hChange")}
+                    </TableHead>
+                    <TableHead
+                        onClick={() => handleSort("price4hChange")}
+                        className="cursor-pointer"
+                    >
+                        4H Change {renderSortIndicator("price4hChange")}
+                    </TableHead>
+                    <TableHead
+                        onClick={() => handleSort("price24hChange")}
+                        className="cursor-pointer"
+                    >
+                        24H Change {renderSortIndicator("price24hChange")}
+                    </TableHead>
                     <TableHead>Actions</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {baskets.map((basket: Basket) => (
+                {sortedBaskets.map((basket: Basket) => (
                     <TableRow key={basket.id}>
                         <TableCell>{basket.name}</TableCell>
                         <TableCell>${basket.currentPrice.toFixed(2)}</TableCell>
