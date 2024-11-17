@@ -13,11 +13,12 @@ import Link from "next/link";
 import { useBaskets } from "@/hooks/use-baskets";
 import { Basket } from "@/lib/types";
 import SkeletonTable from "./skeleton-table";
+import PriceChange from "@/components/percentage-price-change";
 
 export default function BasketsTable() {
     const { baskets, loading, error } = useBaskets();
 
-    if (loading) return <SkeletonTable columns={4} />;
+    if (loading) return <SkeletonTable columns={5} />;
     if (error) return <p>Error: {error}</p>;
 
     return (
@@ -25,8 +26,10 @@ export default function BasketsTable() {
             <TableHeader>
                 <TableRow>
                     <TableHead>Basket Name</TableHead>
-                    <TableHead>Rebalance Interval</TableHead>
-                    <TableHead>Number of Tokens</TableHead>
+                    <TableHead>Price</TableHead>
+                    <TableHead>1H Change</TableHead>
+                    <TableHead>4H Change</TableHead>
+                    <TableHead>24H Change</TableHead>
                     <TableHead>Actions</TableHead>
                 </TableRow>
             </TableHeader>
@@ -34,9 +37,15 @@ export default function BasketsTable() {
                 {baskets.map((basket: Basket) => (
                     <TableRow key={basket.id}>
                         <TableCell>{basket.name}</TableCell>
-                        <TableCell>{basket.rebalanceInterval} days</TableCell>
+                        <TableCell>${basket.currentPrice.toFixed(2)}</TableCell>
                         <TableCell>
-                            {basket.tokens && basket.tokens.length}
+                            <PriceChange change={basket.price1hChange} />
+                        </TableCell>
+                        <TableCell>
+                            <PriceChange change={basket.price4hChange} />
+                        </TableCell>
+                        <TableCell>
+                            <PriceChange change={basket.price24hChange} />
                         </TableCell>
                         <TableCell>
                             <Button asChild>

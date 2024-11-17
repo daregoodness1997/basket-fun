@@ -4,6 +4,10 @@ export type Basket = {
     rebalanceInterval: number;
     createdAt: string;
     tokens: BasketToken[];
+    currentPrice: number;
+    price1hChange: number;
+    price4hChange: number;
+    price24hChange: number;
 };
 
 export type BasketToken = {
