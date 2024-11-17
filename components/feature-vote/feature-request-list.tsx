@@ -82,11 +82,11 @@ export default function FeatureRequests() {
         return (
             <div>
                 <h1 className="text-2xl font-bold mb-4">Feature Requests</h1>
-                <ul className="space-y-4">
-                    {Array.from({ length: 3 }).map((_, index) => (
+                <ul className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                    {Array.from({ length: 6 }).map((_, index) => (
                         <li
                             key={index}
-                            className="border p-4 my-2 rounded-lg shadow-sm"
+                            className="border p-4 my-2 rounded-lg shadow-sm h-40"
                         >
                             <Skeleton className="h-6 w-1/3 mb-2" />
                             <Skeleton className="h-4 w-full mb-2" />
@@ -118,42 +118,55 @@ export default function FeatureRequests() {
                     className="w-full"
                 />
             </div>
-            <ul className="space-y-4">
-                {sortedFeatures.map((feature) => (
-                    <li
-                        key={feature.id}
-                        className={`border p-4 my-2 rounded-lg shadow-sm ${
-                            feature.done ? "bg-muted text-muted-foreground" : ""
-                        }`}
-                    >
-                        <h2 className="text-lg font-semibold flex items-center gap-2">
-                            {feature.title}
-                            {feature.done && (
-                                <Badge variant="secondary">Done</Badge>
-                            )}
-                        </h2>
-                        <p className="text-sm text-muted-foreground">
-                            {feature.description}
-                        </p>
-                        <div className="flex items-center gap-2 mt-2">
-                            <Button
-                                onClick={() => handleVote(feature.id)}
-                                disabled={
-                                    votedFeatures.includes(feature.id) ||
-                                    feature.done
-                                } // Disable button if already voted or feature is done
-                            >
-                                {votedFeatures.includes(feature.id)
-                                    ? "Voted"
-                                    : "Upvote"}
-                            </Button>
-                            <span className="text-sm text-muted-foreground">
-                                {feature.votes} votes
-                            </span>
-                        </div>
-                    </li>
-                ))}
-            </ul>
+            {sortedFeatures.length > 0 ? (
+                <ul className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                    {sortedFeatures.map((feature) => (
+                        <li
+                            key={feature.id}
+                            className={`flex flex-col justify-between border p-4 rounded-lg shadow-sm h-56 ${
+                                feature.done
+                                    ? "bg-muted text-muted-foreground"
+                                    : ""
+                            }`}
+                        >
+                            <div>
+                                <h2 className="text-lg font-semibold flex items-center gap-2">
+                                    {feature.title}
+                                    {feature.done && (
+                                        <Badge variant="secondary">Done</Badge>
+                                    )}
+                                </h2>
+                                <p className="text-sm text-muted-foreground">
+                                    {feature.description}
+                                </p>
+                            </div>
+                            <div className="flex items-center gap-2 mt-2">
+                                <Button
+                                    onClick={() => handleVote(feature.id)}
+                                    disabled={
+                                        votedFeatures.includes(feature.id) ||
+                                        feature.done
+                                    } // Disable button if already voted or feature is done
+                                >
+                                    {votedFeatures.includes(feature.id)
+                                        ? "Voted"
+                                        : "Upvote"}
+                                </Button>
+                                <span className="text-sm text-muted-foreground">
+                                    {feature.votes} votes
+                                </span>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <div className="text-center px-12">
+                    <p className="text-muted-foreground">
+                        No feature requests found. Try searching something else
+                        or check back later!
+                    </p>
+                </div>
+            )}
         </div>
     );
 }
