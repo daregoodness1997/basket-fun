@@ -25,10 +25,12 @@ const Navbar = () => {
                         </Link>
                     </div>
 
-                    {/* Desktop Links */}
                     <div className="flex gap-5 items-center">
                         <Link href={"/baskets"}>
                             <Button>See Baskets</Button>
+                        </Link>
+                        <Link href={"/feature-request"}>
+                            <Button variant="secondary">Feature Request</Button>
                         </Link>
                     </div>
                 </div>
