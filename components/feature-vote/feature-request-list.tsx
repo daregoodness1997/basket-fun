@@ -14,6 +14,7 @@ interface Feature {
 export default function FeatureRequests() {
     const [features, setFeatures] = useState<Feature[]>([]);
     const [loading, setLoading] = useState(true);
+    const [votedFeatures, setVotedFeatures] = useState<string[]>([]); // Tracks upvoted features
 
     useEffect(() => {
         const fetchFeatures = async () => {
@@ -21,17 +22,33 @@ export default function FeatureRequests() {
             const data = await response.json();
             setFeatures(data);
             setLoading(false);
+
+            // Load voted features from local storage
+            const storedVotes = localStorage.getItem("votedFeatures");
+            if (storedVotes) {
+                setVotedFeatures(JSON.parse(storedVotes));
+            }
         };
 
         fetchFeatures();
     }, []);
 
     const handleVote = async (featureId: string) => {
-        await fetch("/api/features/vote", {
+        if (votedFeatures.includes(featureId)) {
+            alert("You've already voted for this feature.");
+            return;
+        }
+
+        const response = await fetch("/api/features/vote", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ feature_id: featureId }),
         });
+
+        if (!response.ok) {
+            alert("Failed to upvote. Please try again.");
+            return;
+        }
 
         // Optimistically update votes
         setFeatures((prev) =>
@@ -40,6 +57,14 @@ export default function FeatureRequests() {
                     ? { ...feature, votes: feature.votes + 1 }
                     : feature
             )
+        );
+
+        // Add feature to local storage tracking
+        const updatedVotedFeatures = [...votedFeatures, featureId];
+        setVotedFeatures(updatedVotedFeatures);
+        localStorage.setItem(
+            "votedFeatures",
+            JSON.stringify(updatedVotedFeatures)
         );
     };
 
@@ -83,8 +108,13 @@ export default function FeatureRequests() {
                             {feature.description}
                         </p>
                         <div className="flex items-center gap-2 mt-2">
-                            <Button onClick={() => handleVote(feature.id)}>
-                                Upvote
+                            <Button
+                                onClick={() => handleVote(feature.id)}
+                                disabled={votedFeatures.includes(feature.id)} // Disable button if already voted
+                            >
+                                {votedFeatures.includes(feature.id)
+                                    ? "Voted"
+                                    : "Upvote"}
                             </Button>
                             <span className="text-sm text-muted-foreground">
                                 {feature.votes} votes
