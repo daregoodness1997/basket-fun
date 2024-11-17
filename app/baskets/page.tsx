@@ -6,7 +6,7 @@ import SkeletonTable from "@/components/skeleton-table";
 export default function Home() {
     return (
         <div className="container mx-auto py-10">
-            <h1 className="text-4xl font-bold mb-8">Basket Manager</h1>
+            <h1 className="text-4xl font-bold mb-8">BasketFi</h1>
             <div className="mb-4">
                 <CreateBasketDialog />
             </div>
