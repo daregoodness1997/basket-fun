@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 
 interface Feature {
     id: string;
@@ -17,6 +18,7 @@ export default function FeatureRequests() {
     const [features, setFeatures] = useState<Feature[]>([]);
     const [loading, setLoading] = useState(true);
     const [votedFeatures, setVotedFeatures] = useState<string[]>([]); // Tracks upvoted features
+    const [searchTerm, setSearchTerm] = useState<string>(""); // Search input
 
     useEffect(() => {
         const fetchFeatures = async () => {
@@ -70,6 +72,12 @@ export default function FeatureRequests() {
         );
     };
 
+    const filteredFeatures = features.filter(
+        (feature) =>
+            feature.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            feature.description.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     if (loading) {
         return (
             <div>
@@ -94,13 +102,22 @@ export default function FeatureRequests() {
         );
     }
 
-    const sortedFeatures = [...features].sort((a, b) =>
+    const sortedFeatures = [...filteredFeatures].sort((a, b) =>
         a.done === b.done ? 0 : a.done ? 1 : -1
     );
 
     return (
         <div>
             <h1 className="text-2xl font-bold">Feature Requests</h1>
+            <div className="my-4">
+                <Input
+                    type="text"
+                    placeholder="Search feature requests..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full"
+                />
+            </div>
             <ul className="space-y-4">
                 {sortedFeatures.map((feature) => (
                     <li
