@@ -3,12 +3,14 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 
 interface Feature {
     id: string;
     title: string;
     description: string;
     votes: number;
+    done: boolean;
 }
 
 export default function FeatureRequests() {
@@ -92,25 +94,37 @@ export default function FeatureRequests() {
         );
     }
 
+    const sortedFeatures = [...features].sort((a, b) =>
+        a.done === b.done ? 0 : a.done ? 1 : -1
+    );
+
     return (
         <div>
             <h1 className="text-2xl font-bold">Feature Requests</h1>
             <ul className="space-y-4">
-                {features.map((feature) => (
+                {sortedFeatures.map((feature) => (
                     <li
                         key={feature.id}
-                        className="border p-4 my-2 rounded-lg shadow-sm"
+                        className={`border p-4 my-2 rounded-lg shadow-sm ${
+                            feature.done ? "bg-muted text-muted-foreground" : ""
+                        }`}
                     >
-                        <h2 className="text-lg font-semibold">
+                        <h2 className="text-lg font-semibold flex items-center gap-2">
                             {feature.title}
+                            {feature.done && (
+                                <Badge variant="secondary">Done</Badge>
+                            )}
                         </h2>
-                        <p className="text-muted-foreground">
+                        <p className="text-sm text-muted-foreground">
                             {feature.description}
                         </p>
                         <div className="flex items-center gap-2 mt-2">
                             <Button
                                 onClick={() => handleVote(feature.id)}
-                                disabled={votedFeatures.includes(feature.id)} // Disable button if already voted
+                                disabled={
+                                    votedFeatures.includes(feature.id) ||
+                                    feature.done
+                                } // Disable button if already voted or feature is done
                             >
                                 {votedFeatures.includes(feature.id)
                                     ? "Voted"
