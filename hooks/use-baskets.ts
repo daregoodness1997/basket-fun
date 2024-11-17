@@ -31,7 +31,7 @@ export function useBaskets() {
     }, []);
 
     const addBasket = async (
-        newBasket: Omit<Basket, "id" | "createdAt" | "tokens"> & {
+        newBasket: Pick<Basket, "name" | "rebalanceInterval"> & {
             tokens: Omit<BasketToken, "id" | "basket_id">[];
         }
     ) => {
