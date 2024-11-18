@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
 import BasketPriceChart from "@/components/basket-price-chart";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 export default function BasketDetails() {
     const params = useParams();
@@ -71,18 +72,30 @@ export default function BasketDetails() {
                     <Table>
                         <TableHeader>
                             <TableRow>
+                                <TableHead>Icon</TableHead>
                                 <TableHead>Symbol</TableHead>
-                                <TableHead>Allocation</TableHead>
+                                <TableHead>Name</TableHead>
                                 <TableHead>Address</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {basket.tokens.map((token, index) => (
                                 <TableRow key={index}>
-                                    <TableCell>{token.symbol}</TableCell>
                                     <TableCell>
-                                        {token.allocation * 100}%
+                                        <Avatar>
+                                            <AvatarImage
+                                                src={token.imageUrl}
+                                                alt={token.name}
+                                            />
+                                            <AvatarFallback>
+                                                {token.symbol.startsWith("$")
+                                                    ? token.symbol[1]
+                                                    : token.symbol[0]}
+                                            </AvatarFallback>
+                                        </Avatar>
                                     </TableCell>
+                                    <TableCell>{token.name}</TableCell>
+                                    <TableCell>{token.symbol}</TableCell>
                                     <TableCell>{token.address}</TableCell>
                                 </TableRow>
                             ))}
