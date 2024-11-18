@@ -7,7 +7,7 @@ import { ShoppingBasket } from "lucide-react";
 import { useEffect } from "react";
 
 export default function AnimatedHero() {
-    const tokens = ["GOAT", "PNUT", "SOL", "WIF", "SCF", "DOGE"];
+    const tokens = ["GOAT", "PNUT", "POPCAT", "WIF", "ZEREBRO", "DOGE"];
     useEffect(() => {
         const updatePrices = async () => {
             await fetch("/api/baskets/token-price");
@@ -37,8 +37,8 @@ export default function AnimatedHero() {
                         initial={{ y: -20, opacity: 0 }}
                         animate={{ y: [null, 0, 20], opacity: [0, 1, 0] }}
                         transition={{
-                            duration: 2,
-                            delay: index * 0.5,
+                            duration: 1,
+                            delay: index * 0.8,
                             repeat: Infinity,
                             repeatDelay: tokens.length * 0.5,
                         }}
