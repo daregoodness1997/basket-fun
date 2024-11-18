@@ -16,6 +16,7 @@ import SkeletonTable from "./skeleton-table";
 import PriceChange from "@/components/percentage-price-change";
 import { useState } from "react";
 import { ArrowUp, ArrowDown } from "lucide-react";
+import { TokenIcon } from "./token-icon";
 
 type SortField =
     | "name"
@@ -30,7 +31,7 @@ export default function BasketsTable() {
     const [sortField, setSortField] = useState<SortField>("name");
     const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
 
-    if (loading) return <SkeletonTable columns={5} />;
+    if (loading) return <SkeletonTable columns={6} />;
     if (error) return <p>Error: {error}</p>;
 
     const handleSort = (field: SortField) => {
@@ -76,6 +77,7 @@ export default function BasketsTable() {
                     >
                         Basket Name {renderSortIndicator("name")}
                     </TableHead>
+                    <TableHead>Icon</TableHead>
                     <TableHead
                         onClick={() => handleSort("currentPrice")}
                         className="cursor-pointer"
@@ -107,6 +109,22 @@ export default function BasketsTable() {
                 {sortedBaskets.map((basket: Basket) => (
                     <TableRow key={basket.id}>
                         <TableCell>{basket.name}</TableCell>
+                        <TableCell>
+                            <div className="flex items-center gap-1">
+                                {basket.tokens.slice(0, 3).map((token) => (
+                                    <TokenIcon
+                                        key={token.symbol}
+                                        token={token}
+                                        size="small"
+                                    />
+                                ))}
+                                {basket.tokens.length > 3 && (
+                                    <span className="text-muted-foreground">
+                                        ...
+                                    </span>
+                                )}
+                            </div>
+                        </TableCell>
                         <TableCell>${basket.currentPrice.toFixed(2)}</TableCell>
                         <TableCell>
                             <PriceChange change={basket.price1hChange} />

@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
 import BasketPriceChart from "@/components/basket-price-chart";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { TokenIcon } from "@/components/token-icon";
 
 export default function BasketDetails() {
     const params = useParams();
@@ -82,17 +82,7 @@ export default function BasketDetails() {
                             {basket.tokens.map((token, index) => (
                                 <TableRow key={index}>
                                     <TableCell>
-                                        <Avatar>
-                                            <AvatarImage
-                                                src={token.imageUrl}
-                                                alt={token.name}
-                                            />
-                                            <AvatarFallback>
-                                                {token.symbol.startsWith("$")
-                                                    ? token.symbol[1]
-                                                    : token.symbol[0]}
-                                            </AvatarFallback>
-                                        </Avatar>
+                                        <TokenIcon token={token} />
                                     </TableCell>
                                     <TableCell>{token.name}</TableCell>
                                     <TableCell>{token.symbol}</TableCell>
