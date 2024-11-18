@@ -1,6 +1,6 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { BasketToken } from "@/lib/types";
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/utils";
 export const TokenIcon = ({
     token,
     size = "large",
