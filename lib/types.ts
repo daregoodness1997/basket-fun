@@ -13,6 +13,8 @@ export type Basket = {
 export type BasketToken = {
     id?: string;
     basket_id?: string;
+    name?: string;
+    imageUrl?: string;
     symbol: string;
     address: string;
     allocation: number;
@@ -44,4 +46,13 @@ export type BasketValue = {
     basket_id: string;
     total_value: number;
     timestamp: string;
+};
+
+export type Token = {
+    address: string;
+    name: string;
+    symbol: string;
+    total_supply: string;
+    image_url: string;
+    price: number;
 };

@@ -32,18 +32,9 @@ const formSchema = z.object({
     rebalanceInterval: z.number().min(1, {
         message: "Rebalance interval must be at least 1 day.",
     }),
-    tokens: z
-        .array(
-            z.object({
-                symbol: z.string().min(1, "Token symbol is required"),
-                address: z.string().min(1, "Token address is required"),
-                allocation: z
-                    .number()
-                    .min(0, "Allocation must be positive")
-                    .max(100, "Allocation cannot exceed 100%"),
-            })
-        )
-        .min(1, "At least one token is required"),
+    addresses: z
+        .array(z.string().min(1, "Token address is required"))
+        .min(1, "At least one token address is required"),
 });
 
 export default function CreateBasketDialog() {
@@ -55,7 +46,7 @@ export default function CreateBasketDialog() {
         defaultValues: {
             name: "",
             rebalanceInterval: 7,
-            tokens: [{ symbol: "", address: "", allocation: 0 }],
+            addresses: [""],
         },
     });
 
@@ -75,7 +66,7 @@ export default function CreateBasketDialog() {
                     <DialogTitle>Create New Basket</DialogTitle>
                     <DialogDescription>
                         Create a new basket with a name, rebalance interval, and
-                        tokens.
+                        token addresses.
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
@@ -95,9 +86,6 @@ export default function CreateBasketDialog() {
                                             {...field}
                                         />
                                     </FormControl>
-                                    <FormDescription>
-                                        Enter a name for your new basket.
-                                    </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -121,90 +109,43 @@ export default function CreateBasketDialog() {
                                             }
                                         />
                                     </FormControl>
-                                    <FormDescription>
-                                        Enter the number of days between
-                                        rebalances.
-                                    </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
-                        {form.watch("tokens").map((_, index) => (
-                            <div key={index} className="space-y-4">
-                                <FormField
-                                    control={form.control}
-                                    name={`tokens.${index}.symbol`}
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                Token {index + 1} Symbol
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder="ETH"
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name={`tokens.${index}.address`}
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                Token {index + 1} Address
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder="0x..."
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name={`tokens.${index}.allocation`}
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                Token {index + 1} Allocation (%)
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="number"
-                                                    {...field}
-                                                    onChange={(e) =>
-                                                        field.onChange(
-                                                            parseFloat(
-                                                                e.target.value
-                                                            )
-                                                        )
-                                                    }
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
+                        {form.watch("addresses").map((_, index) => (
+                            <FormField
+                                key={index}
+                                control={form.control}
+                                name={`addresses.${index}`}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Token {index + 1} Address
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="0x..."
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
                         ))}
                         <Button
                             type="button"
                             variant="outline"
+                            className="mr-2"
                             onClick={() =>
-                                form.setValue("tokens", [
-                                    ...form.watch("tokens"),
-                                    { symbol: "", address: "", allocation: 0 },
+                                form.setValue("addresses", [
+                                    ...form.watch("addresses"),
+                                    "",
                                 ])
                             }
                         >
-                            Add Token
+                            Add Token Address
                         </Button>
                         <Button type="submit">Create Basket</Button>
                     </form>

@@ -19,6 +19,7 @@ export function useBaskets() {
 
                 // Convert the response to camelCase
                 const camelCasedData = camelCaseKeys(data);
+                console.log("camelCasedData", camelCasedData);
                 setBaskets(camelCasedData);
             } catch (error: any) {
                 setError(error.message);
@@ -30,53 +31,34 @@ export function useBaskets() {
         fetchBaskets();
     }, []);
 
-    const addBasket = async (
-        newBasket: Pick<Basket, "name" | "rebalanceInterval"> & {
-            tokens: Omit<BasketToken, "id" | "basket_id">[];
-        }
-    ) => {
+    const addBasket = async ({
+        name,
+        rebalanceInterval,
+        addresses,
+    }: {
+        name: string;
+        rebalanceInterval: number;
+        addresses: string[];
+    }) => {
         try {
-            // Step 1: Create the basket without tokens
-            const { name, rebalanceInterval, tokens } = newBasket;
-            const basketResponse = await fetch("/api/baskets", {
+            const response = await fetch("/api/baskets", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    name: name,
+                    name,
                     rebalance_interval: rebalanceInterval,
+                    addresses,
                 }),
             });
 
-            if (!basketResponse.ok) {
+            if (!response.ok) {
                 throw new Error("Failed to create basket");
             }
 
-            const createdBasket = await basketResponse.json();
-
-            // Step 2: Add tokens to the newly created basket using basket_id
-            for (const token of tokens) {
-                const floatAllocation =
-                    parseFloat(token.allocation as any) / 100;
-                await fetch("/api/baskets/token", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        basket_id: createdBasket.id,
-                        symbol: token.symbol,
-                        address: token.address,
-                        allocation: floatAllocation,
-                    }),
-                });
-            }
-
-            const basket: Basket = { ...createdBasket, tokens };
-
-            // Step 3: Fetch updated baskets list to reflect new addition
-            setBaskets((prevBaskets: Basket[]) => [...prevBaskets, basket]);
+            const newBasket = await response.json();
+            setBaskets((prev) => [...prev, newBasket]);
         } catch (error: any) {
             setError(error.message);
         }
