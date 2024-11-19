@@ -72,20 +72,20 @@ export default function BasketDetails() {
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Icon</TableHead>
-                                <TableHead>Symbol</TableHead>
-                                <TableHead>Name</TableHead>
+                                <TableHead>Token</TableHead>
                                 <TableHead>Address</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {basket.tokens.map((token, index) => (
                                 <TableRow key={index}>
-                                    <TableCell>
+                                    <TableCell className="flex items-center gap-x-2">
                                         <TokenIcon token={token} />
+                                        {token.symbol}{" "}
+                                        <span className="text-stone-500">
+                                            ({token.name})
+                                        </span>
                                     </TableCell>
-                                    <TableCell>{token.name}</TableCell>
-                                    <TableCell>{token.symbol}</TableCell>
                                     <TableCell>{token.address}</TableCell>
                                 </TableRow>
                             ))}
