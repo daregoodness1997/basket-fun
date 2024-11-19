@@ -1,11 +1,13 @@
-import { Basket, BasketToken } from "@/lib/types";
+import { Basket } from "@/lib/types";
 import { camelCaseKeys } from "@/utils/casing";
 import { useEffect, useState } from "react";
+import { useToast } from "./use-toast";
 
 export function useBaskets() {
     const [baskets, setBaskets] = useState<Basket[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const { toast } = useToast();
 
     useEffect(() => {
         const fetchBaskets = async () => {
@@ -19,7 +21,6 @@ export function useBaskets() {
 
                 // Convert the response to camelCase
                 const camelCasedData = camelCaseKeys(data);
-                console.log("camelCasedData", camelCasedData);
                 setBaskets(camelCasedData);
             } catch (error: any) {
                 setError(error.message);
@@ -27,7 +28,6 @@ export function useBaskets() {
                 setLoading(false);
             }
         };
-
         fetchBaskets();
     }, []);
 
@@ -56,9 +56,10 @@ export function useBaskets() {
             if (!response.ok) {
                 throw new Error("Failed to create basket");
             }
-
-            const newBasket = await response.json();
-            setBaskets((prev) => [...prev, newBasket]);
+            toast({
+                title: "Success",
+                description: "Your basket creation has succceeded.",
+            });
         } catch (error: any) {
             setError(error.message);
         }
