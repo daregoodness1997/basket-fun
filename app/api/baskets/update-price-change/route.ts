@@ -43,7 +43,7 @@ async function calculateBasketPrice(basketId: string) {
         historicalPrices.find(
             (p) => currentTimestamp - new Date(p.timestamp).getTime() >= 3600000
         )?.price ||
-        historicalPrices[0]?.price ||
+        historicalPrices.at(-1)?.price ||
         latestPrice;
 
     const price4hAgo =
@@ -52,7 +52,7 @@ async function calculateBasketPrice(basketId: string) {
                 currentTimestamp - new Date(p.timestamp).getTime() >=
                 4 * 3600000
         )?.price ||
-        historicalPrices[0]?.price ||
+        historicalPrices.at(-1)?.price ||
         latestPrice;
 
     const price24hAgo =
@@ -61,7 +61,7 @@ async function calculateBasketPrice(basketId: string) {
                 currentTimestamp - new Date(p.timestamp).getTime() >=
                 24 * 3600000
         )?.price ||
-        historicalPrices[0]?.price ||
+        historicalPrices.at(-1)?.price ||
         latestPrice;
 
     // Calculate percentage changes
