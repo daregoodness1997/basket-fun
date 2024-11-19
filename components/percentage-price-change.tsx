@@ -11,7 +11,7 @@ const PriceChange: React.FC<PriceChangeProps> = ({ change }) => {
 
     return (
         <span
-            className={`font-medium ${
+            className={`font-medium text-right ${
                 isPositive ? "text-green-600" : "text-red-600"
             }`}
         >

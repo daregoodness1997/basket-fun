@@ -17,6 +17,7 @@ import PriceChange from "@/components/percentage-price-change";
 import { useState } from "react";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import { TokenIcon } from "./token-icon";
+import { useRouter } from "next/navigation";
 
 type SortField =
     | "name"
@@ -30,8 +31,9 @@ export default function BasketsTable() {
     const { baskets, loading, error } = useBaskets();
     const [sortField, setSortField] = useState<SortField>("name");
     const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+    const router = useRouter();
 
-    if (loading) return <SkeletonTable columns={6} />;
+    if (loading) return <SkeletonTable columns={5} />;
     if (error) return <p>Error: {error}</p>;
 
     const handleSort = (field: SortField) => {
@@ -102,12 +104,15 @@ export default function BasketsTable() {
                     >
                         24H Change {renderSortIndicator("price24hChange")}
                     </TableHead>
-                    <TableHead>Actions</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
                 {sortedBaskets.map((basket: Basket) => (
-                    <TableRow key={basket.id}>
+                    <TableRow
+                        key={basket.id}
+                        onClick={() => router.push(`/baskets/${basket.id}`)}
+                        className="cursor-pointer"
+                    >
                         <TableCell>{basket.name}</TableCell>
                         <TableCell>
                             <div className="flex items-center gap-1">
@@ -125,22 +130,17 @@ export default function BasketsTable() {
                                 )}
                             </div>
                         </TableCell>
-                        <TableCell>${basket.currentPrice.toFixed(2)}</TableCell>
-                        <TableCell>
+                        <TableCell className="text-right">
+                            ${basket.currentPrice.toFixed(4)}
+                        </TableCell>
+                        <TableCell className="text-right">
                             <PriceChange change={basket.price1hChange} />
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="text-right">
                             <PriceChange change={basket.price4hChange} />
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="text-right">
                             <PriceChange change={basket.price24hChange} />
-                        </TableCell>
-                        <TableCell>
-                            <Button asChild>
-                                <Link href={`/baskets/${basket.id}`}>
-                                    View Details
-                                </Link>
-                            </Button>
                         </TableCell>
                     </TableRow>
                 ))}
