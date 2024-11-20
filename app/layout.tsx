@@ -3,6 +3,8 @@ import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
+import { WalletContextProvider } from "@/components/solana/wallet-context";
+import { SendSOLToRandomAddress } from "@/components/solana/send-random-wallet";
 
 const defaultUrl = process.env.VERCEL_URL
     ? "https://basket-fun.vercel.app"
@@ -42,24 +44,26 @@ export default function RootLayout({
             suppressHydrationWarning
         >
             <body className="bg-background text-foreground">
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="dark"
-                    disableTransitionOnChange
-                >
-                    <main className="min-h-screen flex flex-col">
-                        <div className="flex-1 w-full flex flex-col">
-                            <Navbar />
-                            <div className="flex flex-col gap-20 max-w-5xl p-5 mx-auto">
-                                {children}
+                <WalletContextProvider>
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="dark"
+                        disableTransitionOnChange
+                    >
+                        <main className="min-h-screen flex flex-col">
+                            <div className="flex-1 w-full flex flex-col">
+                                <Navbar />
+                                <div className="flex flex-col gap-20 max-w-5xl p-5 mx-auto">
+                                    {children}
+                                </div>
+                                <footer className="w-full flex items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16">
+                                    <p>Made with hopes and dreams</p>
+                                </footer>
                             </div>
-                            <footer className="w-full flex items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16">
-                                <p>Made with hopes and dreams</p>
-                            </footer>
-                        </div>
-                    </main>
-                    <Toaster />
-                </ThemeProvider>
+                        </main>
+                        <Toaster />
+                    </ThemeProvider>
+                </WalletContextProvider>
             </body>
         </html>
     );

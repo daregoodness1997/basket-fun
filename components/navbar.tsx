@@ -10,7 +10,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
 const Navbar = () => {
     return (
@@ -38,10 +38,12 @@ const Navbar = () => {
                         <Link href={"/feature-request"}>
                             <Button variant="secondary">Feature Request</Button>
                         </Link>
+                        <WalletMultiButton />
                     </div>
                 </div>
             </div>
-            <div className="flex md:hidden p-4">
+            <div className="flex md:hidden p-4 gap-x-2">
+                <WalletMultiButton />
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button

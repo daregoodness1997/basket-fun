@@ -1,0 +1,50 @@
+/* custom-wallet-adapter.css */
+
+/* Override button styles for the WalletMultiButton and WalletDisconnectButton */
+.wallet-adapter-button {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-4 py-2 !important;
+}
+
+.wallet-adapter-button-trigger {
+    @apply text-sm font-medium h-full hover:bg-primary rounded-md !important;
+}
+
+/* Override the modal styles */
+.wallet-adapter-modal, .wallet-adapter-modal-wrapper {
+    @apply bg-background text-foreground shadow-lg rounded-lg p-6;
+}
+
+.wallet-adapter-modal-title {
+    @apply text-xl ;
+}
+
+.wallet-adapter-modal-list {
+    @apply flex flex-col gap-2 rounded;
+}
+
+.wallet-adapter-modal-list > li {
+    @apply rounded-lg;
+}
+.wallet-adapter-modal-list-item {
+    @apply bg-secondary text-secondary-foreground rounded-md p-3 hover:bg-secondary/90;
+}
+
+/* Adjust the wallet adapter logo styles */
+.wallet-adapter-modal-list-item-icon {
+    @apply w-6 h-6;
+}
+
+.wallet-adapter-modal-list-item-name {
+    @apply text-sm font-medium;
+}
+
+.wallet-adapter-dropdown-list {
+    @apply z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2
+}
+.wallet-adapter-dropdown-list-item {
+    @apply relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 font-medium 
+}
+
+.wallet-adapter-dropdown-list-item:not([disabled]):hover {
+    @apply bg-accent text-accent-foreground;
+}
