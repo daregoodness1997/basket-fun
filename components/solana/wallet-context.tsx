@@ -26,7 +26,7 @@ export const WalletContextProvider: FC<{ children: ReactNode }> = ({
     // console.log("endpoint", endpoint);
     // Read endpoint from environment
     const endpoint =
-        process.env.NEXT_PUBLIC_SOLANA_RPC || clusterApiUrl("mainnet-beta");
+        process.env.MAINNET_SOLANA_RPC || clusterApiUrl("mainnet-beta");
 
     // Wallet adapters
     const wallets = useMemo(() => [new UnsafeBurnerWalletAdapter()], []);
