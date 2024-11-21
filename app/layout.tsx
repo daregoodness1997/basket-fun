@@ -4,7 +4,7 @@ import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 import { WalletContextProvider } from "@/components/solana/wallet-context";
-import { SendSOLToRandomAddress } from "@/components/solana/send-random-wallet";
+import { Analytics } from "@vercel/analytics/next";
 
 const defaultUrl = process.env.VERCEL_URL
     ? "https://basket-fun.vercel.app"
@@ -64,6 +64,7 @@ export default function RootLayout({
                         <Toaster />
                     </ThemeProvider>
                 </WalletContextProvider>
+                <Analytics />
             </body>
         </html>
     );
