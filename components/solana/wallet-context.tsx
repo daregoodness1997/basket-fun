@@ -6,7 +6,11 @@ import {
     WalletProvider,
 } from "@solana/wallet-adapter-react";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import { UnsafeBurnerWalletAdapter } from "@solana/wallet-adapter-wallets";
+import {
+    LedgerWalletAdapter,
+    PhantomWalletAdapter,
+    SolflareWalletAdapter,
+} from "@solana/wallet-adapter-wallets";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { clusterApiUrl } from "@solana/web3.js";
 
@@ -31,7 +35,14 @@ export const WalletContextProvider: FC<{ children: ReactNode }> = ({
     console.log("endpoint", endpoint);
 
     // Wallet adapters
-    const wallets = useMemo(() => [new UnsafeBurnerWalletAdapter()], []);
+    const wallets = useMemo(
+        () => [
+            new PhantomWalletAdapter(),
+            new SolflareWalletAdapter(),
+            new LedgerWalletAdapter(),
+        ],
+        []
+    );
 
     return (
         <ConnectionProvider endpoint={endpoint}>

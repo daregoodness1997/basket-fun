@@ -3,22 +3,48 @@
 import React, { FC, useState } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import {
-    Transaction,
     PublicKey,
     TransactionInstruction,
+    AddressLookupTableAccount,
+    TransactionMessage,
+    VersionedTransaction,
 } from "@solana/web3.js";
 import { createJupiterApiClient } from "@jup-ag/api"; // Import Jupiter API client
 import { Button } from "../ui/button";
 import { Basket } from "@/lib/types";
 import { Input } from "../ui/input";
-import { getTransactionSize } from "@/utils/solana/get-transaction-size";
+import { sendBatchWithSingleSign } from "@/utils/solana/send-batch-with-single-sign";
 
 export const JupiterBasketSwap: FC<{ basket: Basket }> = ({ basket }) => {
     const { connection } = useConnection();
-    const { publicKey, sendTransaction } = useWallet();
+    const { publicKey, signAllTransactions, sendTransaction } = useWallet();
     const [inputAmount, setInputAmount] = useState<string>(""); // Amount in SOL
     const [loading, setLoading] = useState<boolean>(false);
     const basketTokens = basket.tokens.map((token) => token.address);
+    const getAddressLookupTableAccounts = async (
+        keys: string[]
+    ): Promise<AddressLookupTableAccount[]> => {
+        const accountInfos = await connection.getMultipleAccountsInfo(
+            keys.map((key) => new PublicKey(key))
+        );
+
+        return accountInfos.reduce(
+            (acc: AddressLookupTableAccount[], info, i) => {
+                if (info) {
+                    acc.push(
+                        new AddressLookupTableAccount({
+                            key: new PublicKey(keys[i]),
+                            state: AddressLookupTableAccount.deserialize(
+                                info.data
+                            ),
+                        })
+                    );
+                }
+                return acc;
+            },
+            []
+        );
+    };
 
     const onClick = async () => {
         if (!publicKey) {
@@ -28,19 +54,15 @@ export const JupiterBasketSwap: FC<{ basket: Basket }> = ({ basket }) => {
 
         try {
             setLoading(true);
+            const transactions: VersionedTransaction[] = [];
 
             const {
-                context: { slot: minContextSlot },
-                value: { blockhash, lastValidBlockHeight },
+                value: { blockhash },
             } = await connection.getLatestBlockhashAndContext();
 
             const jupiterQuoteApi = createJupiterApiClient();
 
             const lamports = Math.floor(parseFloat(inputAmount) * 1e9); // Convert SOL to lamports
-
-            const transaction = new Transaction();
-            transaction.recentBlockhash = blockhash;
-            transaction.feePayer = publicKey;
 
             for (const tokenAddress of basketTokens) {
                 // Get a quote for the swap
@@ -48,7 +70,9 @@ export const JupiterBasketSwap: FC<{ basket: Basket }> = ({ basket }) => {
                     inputMint: "So11111111111111111111111111111111111111112", // SOL mint
                     outputMint: tokenAddress,
                     amount: lamports / basketTokens.length, // Split equally among tokens
-                    slippageBps: 100, // 1% slippage
+                    slippageBps: 200, // 5% slippage
+                    maxAccounts: 64,
+                    restrictIntermediateTokens: true,
                 });
 
                 if (!quoteResponse) {
@@ -62,6 +86,17 @@ export const JupiterBasketSwap: FC<{ basket: Basket }> = ({ basket }) => {
                         swapRequest: {
                             userPublicKey: publicKey.toString(),
                             quoteResponse,
+                            dynamicComputeUnitLimit: true, // Set this to true to get the best optimized CU usage.
+                            dynamicSlippage: {
+                                // This will set an optimized slippage to ensure high success rate
+                                maxBps: 300, // Make sure to set a reasonable cap here to prevent MEV
+                            },
+                            prioritizationFeeLamports: {
+                                priorityLevelWithMaxLamports: {
+                                    maxLamports: 10000000,
+                                    priorityLevel: "veryHigh", // If you want to land transaction fast, set this to use `veryHigh`. You will pay on average higher priority fee.
+                                },
+                            },
                         },
                     });
 
@@ -72,7 +107,7 @@ export const JupiterBasketSwap: FC<{ basket: Basket }> = ({ basket }) => {
                 }
 
                 // Convert Jupiter instructions to Solana-compatible instructions
-                const toTransactionInstruction = (
+                const deserialiseInstruction = (
                     instruction: any
                 ): TransactionInstruction =>
                     new TransactionInstruction({
@@ -90,33 +125,40 @@ export const JupiterBasketSwap: FC<{ basket: Basket }> = ({ basket }) => {
                     setupInstructions,
                     swapInstruction,
                     cleanupInstruction,
+                    addressLookupTableAddresses,
                 } = swapInstructionsResponse;
+                // Fetch and use Address Lookup Table accounts
+                const lookupTableAccounts = await getAddressLookupTableAccounts(
+                    addressLookupTableAddresses
+                );
 
-                transaction.add(
-                    ...computeBudgetInstructions.map(toTransactionInstruction)
-                );
-                transaction.add(
-                    ...setupInstructions.map(toTransactionInstruction)
-                );
-                transaction.add(toTransactionInstruction(swapInstruction));
-                if (cleanupInstruction) {
-                    transaction.add(
-                        toTransactionInstruction(cleanupInstruction)
-                    );
-                }
+                // Create a versioned transaction
+                const message = new TransactionMessage({
+                    payerKey: publicKey,
+                    recentBlockhash: blockhash,
+                    instructions: [
+                        ...computeBudgetInstructions.map(
+                            deserialiseInstruction
+                        ),
+                        ...setupInstructions.map(deserialiseInstruction),
+                        deserialiseInstruction(swapInstruction),
+                        cleanupInstruction
+                            ? deserialiseInstruction(cleanupInstruction)
+                            : undefined,
+                    ].filter(
+                        (instruction): instruction is TransactionInstruction =>
+                            instruction !== undefined
+                    ),
+                }).compileToV0Message(lookupTableAccounts);
+                transactions.push(new VersionedTransaction(message));
             }
 
-            // Send the transaction
-            const signature = await sendTransaction(transaction, connection, {
-                minContextSlot,
+            await sendBatchWithSingleSign({
+                connection,
+                transactions,
+                publicKey,
+                signAllTransactions,
             });
-            await connection.confirmTransaction({
-                blockhash,
-                lastValidBlockHeight,
-                signature,
-            });
-
-            alert(`Transaction successful! Signature: ${signature}`);
         } catch (error: any) {
             console.error("Error during Jupiter basket swap:", error.message);
             alert("Failed to complete basket swap. See console for details.");
