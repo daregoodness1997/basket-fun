@@ -42,7 +42,6 @@ export async function sendBatchWithSingleSign({
                 lastValidBlockHeight,
                 signature,
             });
-            console.log("Transaction confirmed:", signature);
         }
     } catch (error) {
         console.error("Error sending batch transactions:", error);

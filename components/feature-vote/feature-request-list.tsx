@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 
 interface Feature {
     id: string;
@@ -19,6 +20,7 @@ export default function FeatureRequests() {
     const [loading, setLoading] = useState(true);
     const [votedFeatures, setVotedFeatures] = useState<string[]>([]); // Tracks upvoted features
     const [searchTerm, setSearchTerm] = useState<string>(""); // Search input
+    const { toast } = useToast();
 
     useEffect(() => {
         const fetchFeatures = async () => {
@@ -39,7 +41,7 @@ export default function FeatureRequests() {
 
     const handleVote = async (featureId: string) => {
         if (votedFeatures.includes(featureId)) {
-            alert("You've already voted for this feature.");
+            toast({ title: "Failed to complete basket swap." });
             return;
         }
 
@@ -50,7 +52,7 @@ export default function FeatureRequests() {
         });
 
         if (!response.ok) {
-            alert("Failed to upvote. Please try again.");
+            toast({ title: "Failed to upvote. Please try again." });
             return;
         }
 

@@ -14,9 +14,11 @@ import { Button } from "../ui/button";
 import { Basket } from "@/lib/types";
 import { Input } from "../ui/input";
 import { sendBatchWithSingleSign } from "@/utils/solana/send-batch-with-single-sign";
+import { useToast } from "@/hooks/use-toast";
 
 export const JupiterBasketSwap: FC<{ basket: Basket }> = ({ basket }) => {
     const { connection } = useConnection();
+    const { toast } = useToast();
     const { publicKey, signAllTransactions, sendTransaction } = useWallet();
     const [inputAmount, setInputAmount] = useState<string>(""); // Amount in SOL
     const [loading, setLoading] = useState<boolean>(false);
@@ -49,7 +51,7 @@ export const JupiterBasketSwap: FC<{ basket: Basket }> = ({ basket }) => {
 
     const onClick = async () => {
         if (!publicKey) {
-            alert("Wallet not connected!");
+            toast({ title: "Wallet not connected!" });
             return;
         }
 
@@ -164,7 +166,7 @@ export const JupiterBasketSwap: FC<{ basket: Basket }> = ({ basket }) => {
             });
         } catch (error: any) {
             console.error("Error during Jupiter basket swap:", error.message);
-            alert("Failed to complete basket swap. See console for details.");
+            toast({ title: "Failed to complete basket swap." });
         } finally {
             setLoading(false);
         }

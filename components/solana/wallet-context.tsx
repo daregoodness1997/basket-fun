@@ -25,14 +25,9 @@ export const WalletContextProvider: FC<{ children: ReactNode }> = ({
 }) => {
     const network = WalletAdapterNetwork.Mainnet;
 
-    // RPC endpoint
-    // const endpoint = useMemo(() => clusterApiUrl("mainnet-beta"), [network]);
-    // console.log("endpoint", endpoint);
-    // Read endpoint from environment
     const endpoint =
         process.env.NEXT_PUBLIC_MAINNET_SOLANA_RPC ||
         clusterApiUrl("mainnet-beta");
-    console.log("endpoint", endpoint);
 
     // Wallet adapters
     const wallets = useMemo(
