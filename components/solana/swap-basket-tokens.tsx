@@ -21,6 +21,7 @@ export const JupiterBasketSwap: FC<{ basket: Basket }> = ({ basket }) => {
     const [inputAmount, setInputAmount] = useState<string>(""); // Amount in SOL
     const [loading, setLoading] = useState<boolean>(false);
     const basketTokens = basket.tokens.map((token) => token.address);
+
     const getAddressLookupTableAccounts = async (
         keys: string[]
     ): Promise<AddressLookupTableAccount[]> => {
@@ -69,8 +70,10 @@ export const JupiterBasketSwap: FC<{ basket: Basket }> = ({ basket }) => {
                 const quoteResponse = await jupiterQuoteApi.quoteGet({
                     inputMint: "So11111111111111111111111111111111111111112", // SOL mint
                     outputMint: tokenAddress,
-                    amount: lamports / basketTokens.length, // Split equally among tokens
-                    slippageBps: 200, // 5% slippage
+                    amount: parseInt(
+                        (lamports / basketTokens.length).toFixed(0)
+                    ), // Split equally among tokens
+                    slippageBps: 500, // 5% slippage
                     maxAccounts: 64,
                     restrictIntermediateTokens: true,
                 });
@@ -89,7 +92,7 @@ export const JupiterBasketSwap: FC<{ basket: Basket }> = ({ basket }) => {
                             dynamicComputeUnitLimit: true, // Set this to true to get the best optimized CU usage.
                             dynamicSlippage: {
                                 // This will set an optimized slippage to ensure high success rate
-                                maxBps: 300, // Make sure to set a reasonable cap here to prevent MEV
+                                maxBps: 500, // Make sure to set a reasonable cap here to prevent MEV
                             },
                             prioritizationFeeLamports: {
                                 priorityLevelWithMaxLamports: {
