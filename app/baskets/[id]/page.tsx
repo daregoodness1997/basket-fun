@@ -23,6 +23,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
 import BasketPriceChart from "@/components/basket-price-chart";
 import { TokenIcon } from "@/components/token-icon";
+import { JupiterBasketSwap } from "@/components/solana/swap-basket-tokens";
 
 export default function BasketDetails() {
     const params = useParams();
@@ -59,6 +60,7 @@ export default function BasketDetails() {
             <Button asChild className="mb-4">
                 <Link href="/baskets">Back to Baskets</Link>
             </Button>
+            <JupiterBasketSwap basket={basket} />
             <BasketPriceChart priceData={priceData} name={basket.name} />
             <Card className="max-w-[80vw] sm:max-w-none">
                 <CardHeader>
