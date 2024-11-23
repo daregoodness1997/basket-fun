@@ -8,6 +8,7 @@ export type Basket = {
     price1hChange: number;
     price4hChange: number;
     price24hChange: number;
+    priceSinceCreationChange: number;
 };
 
 export type BasketToken = {

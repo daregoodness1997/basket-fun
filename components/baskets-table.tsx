@@ -24,7 +24,8 @@ type SortField =
     | "currentPrice"
     | "price1hChange"
     | "price4hChange"
-    | "price24hChange";
+    | "price24hChange"
+    | "priceSinceCreationChange";
 type SortDirection = "asc" | "desc";
 
 export default function BasketsTable() {
@@ -33,7 +34,7 @@ export default function BasketsTable() {
     const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
     const router = useRouter();
 
-    if (loading) return <SkeletonTable columns={5} />;
+    if (loading) return <SkeletonTable columns={6} />;
     if (error) return <p>Error: {error}</p>;
 
     const handleSort = (field: SortField) => {
@@ -104,6 +105,13 @@ export default function BasketsTable() {
                     >
                         24H Change {renderSortIndicator("price24hChange")}
                     </TableHead>
+                    <TableHead
+                        onClick={() => handleSort("priceSinceCreationChange")}
+                        className="cursor-pointer"
+                    >
+                        YTD Change
+                        {renderSortIndicator("priceSinceCreationChange")}
+                    </TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -141,6 +149,11 @@ export default function BasketsTable() {
                         </TableCell>
                         <TableCell className="text-right">
                             <PriceChange change={basket.price24hChange} />
+                        </TableCell>
+                        <TableCell className="text-right">
+                            <PriceChange
+                                change={basket.priceSinceCreationChange}
+                            />
                         </TableCell>
                     </TableRow>
                 ))}

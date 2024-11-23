@@ -63,12 +63,15 @@ async function calculateBasketPrice(basketId: string) {
         )?.price ||
         historicalPrices.at(-1)?.price ||
         latestPrice;
+    const priceSinceCreation = historicalPrices.at(-1)?.price || latestPrice;
 
     // Calculate percentage changes
     const price1hChange = ((latestPrice - price1hAgo) / price1hAgo) * 100 || 0;
     const price4hChange = ((latestPrice - price4hAgo) / price4hAgo) * 100 || 0;
     const price24hChange =
         ((latestPrice - price24hAgo) / price24hAgo) * 100 || 0;
+    const priceSinceCreationChange =
+        ((latestPrice - priceSinceCreation) / priceSinceCreation) * 100 || 0;
 
     // Update or insert the current basket price and changes
     await supabase
@@ -78,6 +81,7 @@ async function calculateBasketPrice(basketId: string) {
             price_1h_change: price1hChange,
             price_4h_change: price4hChange,
             price_24h_change: price24hChange,
+            price_since_creation_change: priceSinceCreationChange,
         })
         .eq("id", basketId);
 }
