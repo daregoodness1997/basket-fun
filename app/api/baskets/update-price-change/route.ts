@@ -29,6 +29,12 @@ async function calculateBasketPrice(basketId: string) {
         .select("price, timestamp")
         .eq("basket_id", basketId)
         .order("timestamp", { ascending: false });
+    const { data: initialPrice, error: initialError } = await supabase
+        .from("basket_prices")
+        .select("price, timestamp")
+        .eq("basket_id", basketId)
+        .order("timestamp", { ascending: true })
+        .limit(1);
 
     if (historicalError) {
         console.error(
@@ -63,7 +69,10 @@ async function calculateBasketPrice(basketId: string) {
         )?.price ||
         historicalPrices.at(-1)?.price ||
         latestPrice;
-    const priceSinceCreation = historicalPrices.at(-1)?.price || latestPrice;
+    const priceSinceCreation =
+        initialPrice?.at(0)?.price ||
+        historicalPrices.at(-1)?.price ||
+        latestPrice;
 
     // Calculate percentage changes
     const price1hChange = ((latestPrice - price1hAgo) / price1hAgo) * 100 || 0;
