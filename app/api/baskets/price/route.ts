@@ -14,15 +14,33 @@ export async function GET(req: Request) {
 
     const supabase = await createClient();
 
-    const { data: basketPrices, error } = await supabase
-        .from("basket_prices")
-        .select("timestamp, price")
-        .eq("basket_id", basketId)
-        .order("timestamp", { ascending: true });
+    let allBasketPrices: any = [];
+    let start = 0;
+    const batchSize = 1000;
 
-    if (error) {
-        return NextResponse.json({ error: error.message }, { status: 400 });
+    while (true) {
+        const { data: batch, error } = await supabase
+            .from("basket_prices")
+            .select("timestamp, price")
+            .eq("basket_id", basketId)
+            .order("timestamp", { ascending: true })
+            .range(start, start + batchSize - 1); // Fetch rows in batches
+
+        if (error) {
+            return NextResponse.json({ error: error.message }, { status: 400 });
+        }
+
+        if (!batch || batch.length === 0) {
+            break; // No more data to fetch
+        }
+
+        allBasketPrices = allBasketPrices.concat(batch);
+        start += batchSize;
+
+        if (batch.length < batchSize) {
+            break; // Last batch fetched
+        }
     }
 
-    return NextResponse.json(basketPrices);
+    return NextResponse.json(allBasketPrices);
 }
