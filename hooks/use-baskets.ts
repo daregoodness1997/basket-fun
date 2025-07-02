@@ -9,25 +9,26 @@ export function useBaskets() {
     const [error, setError] = useState<string | null>(null);
     const { toast } = useToast();
 
-    useEffect(() => {
-        const fetchBaskets = async () => {
-            try {
-                setLoading(true);
-                const response = await fetch("/api/baskets");
-                if (!response.ok) {
-                    throw new Error("Failed to fetch baskets");
-                }
-                const data = await response.json();
-
-                // Convert the response to camelCase
-                const camelCasedData = camelCaseKeys(data);
-                setBaskets(camelCasedData);
-            } catch (error: any) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
+    const fetchBaskets = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch("/api/baskets");
+            if (!response.ok) {
+                throw new Error("Failed to fetch baskets");
             }
-        };
+            const data = await response.json();
+
+            // Convert the response to camelCase
+            const camelCasedData = camelCaseKeys(data);
+            setBaskets(camelCasedData);
+        } catch (error: any) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         fetchBaskets();
     }, []);
 
@@ -69,5 +70,5 @@ export function useBaskets() {
         return baskets.find((basket: Basket) => basket.id === id);
     };
 
-    return { baskets, addBasket, getBasketById, loading, error };
+    return { baskets, addBasket, getBasketById, loading, error, refetch: fetchBaskets };
 }
